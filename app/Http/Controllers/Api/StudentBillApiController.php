@@ -7,6 +7,7 @@ use App\Models\Tagihan;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class StudentBillApiController extends Controller
 {
@@ -15,12 +16,18 @@ class StudentBillApiController extends Controller
      */
     public function show(Request $request, string $studentId): JsonResponse
     {
+        $isUuid = Str::isUuid($studentId);
+
         $student = User::withoutGlobalScope('institution')
             ->with('institusi')
             ->where('role', 'mahasiswa')
-            ->where(function ($query) use ($studentId) {
-                $query->where('id', $studentId)
-                    ->orWhere('nim', $studentId);
+            ->when($isUuid, function ($query) use ($studentId) {
+                $query->where(function ($q) use ($studentId) {
+                    $q->where('id', $studentId)
+                        ->orWhere('nim', $studentId);
+                });
+            }, function ($query) use ($studentId) {
+                $query->where('nim', $studentId);
             })
             ->first();
 
