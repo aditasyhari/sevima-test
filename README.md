@@ -119,7 +119,7 @@ Salam hormat,
 
 ## 🧪 Menjalankan Automated Test Suite
 
-Aplikasi dilengkapi dengan **36 unit dan feature tests** yang mencakup logika bisnis inti, isolasi multi-tenant, dan format payload bilingual:
+Aplikasi dilengkapi dengan **41 unit dan feature tests (152 assertions)** yang mencakup logika bisnis inti, isolasi multi-tenant, akses portal KRS, simulasi gateway, dan format payload bilingual:
 
 ```bash
 php artisan test
@@ -136,7 +136,12 @@ php artisan test
    - Pengujian **Idempotency**: pengiriman event `payment.success` berulang tidak menyebabkan *double-credit* atau duplikasi ledger.
    - Pengujian **Out-of-Order**: event `payment.expired` yang datang terlambat diabaikan jika tagihan sudah berstatus `lunas`.
 3. **`StudentBillingApiTest.php`:**
-   - Memverifikasi endpoint status tagihan, status kelayakan KRS, dan riwayat transaksi mahasiswa.
+   - Memverifikasi endpoint status tagihan, status kelayakan KRS, dan riwayat transaksi mahasiswa via UUID maupun NIM.
+4. **`GatewaySimulatorTest.php`:**
+   - Memverifikasi render halaman simulator, dispatch payload, dan live kalkulasi signature HMAC.
+5. **`KrsAccessTest.php`:**
+   - Memverifikasi mahasiswa dengan UKT lunas dapat mengakses portal KRS dan menyusun mata kuliah.
+   - Memverifikasi proteksi gembok (*access gating*) bagi mahasiswa yang belum lunas atau kedaluwarsa.
 
 ---
 

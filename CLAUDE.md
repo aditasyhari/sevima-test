@@ -8,7 +8,7 @@ Aplikasi web fullstack multi-tenant untuk pengelolaan tagihan Uang Kuliah Tungga
 - **Frontend:** Inertia.js (Vue 3, Composition API `<script setup>`) dengan Atomic Design dan tema Retro-Pop
 - **Database:** PostgreSQL 16 (Wajib) dengan tipe data native `UUID` (UUIDv7)
 - **Container:** Docker & Docker Compose (Nginx + PHP-FPM + PostgreSQL)
-- **Testing:** Pest PHP (33 unit & feature test cases)
+- **Testing:** Pest PHP (41 unit & feature test cases, 152 assertions)
 
 ### Cara Menjalankan dengan Docker (1 Perintah)
 ```bash
