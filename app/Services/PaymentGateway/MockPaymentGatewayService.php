@@ -49,22 +49,53 @@ class MockPaymentGatewayService
         $jsonPayload = json_encode($payload, JSON_UNESCAPED_SLASHES);
         $signature = $this->generateSignature($jsonPayload, $secret);
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-            'X-Signature' => $signature,
-            'User-Agent' => 'SEVIMA-Mock-Payment-Gateway/1.0',
-        ])
-            ->timeout(10)
-            ->withBody($jsonPayload, 'application/json')
-            ->post($targetUrl);
+        // Docker loopback translation: If targeting localhost:8000 from within Docker container,
+        // port 8000 may not be reachable if Nginx only binds to port 80. Fall back to port 80 if needed.
+        $requestUrl = $targetUrl;
+        $parsed = parse_url($targetUrl);
+        $host = $parsed['host'] ?? '';
+        $port = $parsed['port'] ?? null;
 
-        return [
-            'sent_payload' => $payload,
-            'raw_payload' => $jsonPayload,
-            'sent_signature' => $signature,
-            'status_code' => $response->status(),
-            'response_body' => $response->json() ?? $response->body(),
-        ];
+        if (in_array($host, ['localhost', '127.0.0.1']) && $port == 8000) {
+            $fp = @fsockopen('127.0.0.1', 8000, $errno, $errstr, 0.1);
+            if (! $fp) {
+                $path = $parsed['path'] ?? '';
+                $query = isset($parsed['query']) ? '?'.$parsed['query'] : '';
+                $requestUrl = "http://127.0.0.1{$path}{$query}";
+            } else {
+                fclose($fp);
+            }
+        }
+
+        try {
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'X-Signature' => $signature,
+                'User-Agent' => 'SEVIMA-Mock-Payment-Gateway/1.0',
+            ])
+                ->timeout(10)
+                ->withBody($jsonPayload, 'application/json')
+                ->post($requestUrl);
+
+            return [
+                'sent_payload' => $payload,
+                'raw_payload' => $jsonPayload,
+                'sent_signature' => $signature,
+                'status_code' => $response->status(),
+                'response_body' => $response->json() ?? $response->body(),
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'sent_payload' => $payload,
+                'raw_payload' => $jsonPayload,
+                'sent_signature' => $signature,
+                'status_code' => 502,
+                'response_body' => [
+                    'status' => 'error',
+                    'message' => 'Gagal menghubungi endpoint webhook target: '.$e->getMessage(),
+                ],
+            ];
+        }
     }
 }
