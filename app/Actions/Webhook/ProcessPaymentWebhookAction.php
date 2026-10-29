@@ -25,15 +25,24 @@ class ProcessPaymentWebhookAction
      */
     public function execute(Institusi $institusi, array $payload): array
     {
-        $event = $payload['event'] ?? null;
-        $billNumber = $payload['bill_number'] ?? null;
-        $amount = isset($payload['amount']) ? (float) $payload['amount'] : 0.0;
-        $reference = $payload['transaction_reference'] ?? ('REF-'.uniqid());
-        $paymentTime = isset($payload['payment_time']) ? Carbon::parse($payload['payment_time']) : Carbon::now();
+        // Dukungan fleksibel bilingual (English & Bahasa Indonesia)
+        $event = $payload['event'] ?? $payload['jenis_event'] ?? null;
+        $billNumber = $payload['bill_number'] ?? $payload['nomor_tagihan'] ?? $payload['invoice_number'] ?? null;
+        $amount = isset($payload['amount'])
+            ? (float) $payload['amount']
+            : (isset($payload['nominal']) ? (float) $payload['nominal'] : 0.0);
+        $reference = $payload['transaction_reference']
+            ?? $payload['referensi_gateway']
+            ?? $payload['referensi']
+            ?? $payload['reference']
+            ?? ('REF-'.uniqid());
+
+        $paymentTimeRaw = $payload['payment_time'] ?? $payload['waktu_transaksi'] ?? null;
+        $paymentTime = $paymentTimeRaw ? Carbon::parse($paymentTimeRaw) : Carbon::now();
 
         if (empty($event) || empty($billNumber)) {
             throw ValidationException::withMessages([
-                'payload' => 'Field event dan bill_number wajib diisi.',
+                'payload' => 'Field event (jenis_event) dan bill_number (nomor_tagihan) wajib diisi.',
             ]);
         }
 

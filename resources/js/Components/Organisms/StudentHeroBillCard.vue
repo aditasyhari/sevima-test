@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
 import RetroBadge from '@/Components/Atoms/RetroBadge.vue';
 import RupiahFormat from '@/Components/Atoms/RupiahFormat.vue';
 
@@ -64,11 +65,26 @@ defineProps({
             </div>
 
             <!-- Instructions based on status -->
-            <div v-if="bill.status === 'belum_bayar'" class="flex items-center gap-3 p-4 rounded-xl bg-retro-yellow-light border-1.5 border-neutral-900">
-                <span class="text-2xl">💡</span>
-                <p class="text-xs text-neutral-800 leading-relaxed font-medium">
-                    Silakan lakukan transfer ke nomor Virtual Account di atas sebelum batas waktu berakhir. Notifikasi pembayaran dari payment gateway akan otomatis memperbarui status tagihan ini menjadi <strong>Lunas</strong>.
-                </p>
+            <div v-if="bill.status === 'belum_bayar'" class="p-4 rounded-2xl bg-retro-yellow-light border-1.5 border-neutral-900 space-y-3">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">💡</span>
+                    <p class="text-xs text-neutral-800 leading-relaxed font-medium">
+                        Silakan lakukan transfer ke nomor Virtual Account di atas sebelum batas waktu berakhir. Notifikasi pembayaran dari payment gateway akan otomatis memperbarui status tagihan ini menjadi <strong>Lunas</strong> dan membuka akses KRS.
+                    </p>
+                </div>
+
+                <div class="pt-2 border-t border-neutral-300 flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-neutral-600">
+                        ⚡ Pintasan Uji Evaluasi (Reviewer):
+                    </span>
+                    <Link
+                        :href="route('simulator.index', { tagihan_id: bill.id })"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-1.5 border-neutral-900 bg-white hover:bg-retro-yellow text-neutral-900 font-bold text-xs shadow-retro-sm transition-all cursor-pointer"
+                    >
+                        <span>🧪 Uji Pelunasan di Mock Gateway</span>
+                        <span>➔</span>
+                    </Link>
+                </div>
             </div>
 
             <div v-else-if="bill.status === 'lunas'" class="flex items-center gap-3 p-4 rounded-xl bg-retro-green-light border-1.5 border-neutral-900">

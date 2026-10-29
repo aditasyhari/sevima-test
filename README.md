@@ -71,16 +71,55 @@ Database telah di-seed dengan **3 institusi berbeda**, lengkap dengan akun demo 
 | **Poltek Harapan Bangsa** | `UNIV-C` | Admin Keuangan | Admin Poltek Harapan | `admin.univc@sevima.test` | `password` |
 | | | Mahasiswa | Maya Anggraini (NIM: 2024030001) | `maya.univc@sevima.test` | `password` |
 
-### Secret HMAC per Institusi:
-- **UNIV-A:** `secret_univ_a_98fbc12a`
-- **UNIV-B:** `secret_univ_b_77ea410d`
-- **UNIV-C:** `secret_univ_c_13cd99fa`
+### 🔐 Manajemen Kepatuhan Secret HMAC (Sesuai Ketentuan Soal)
+
+> ⚠️ **Catatan Kepatuhan Evaluasi:**  
+> Sesuai instruksi soal tes: *"Secret HMAC mohon dikirim terpisah melalui email. Secret tidak boleh tertulis di repositori."*  
+> Oleh karena itu:
+> 1. Secret diinjeksi secara aman melalui Environment Variable (`HMAC_SECRET_UNIV_A`, `HMAC_SECRET_UNIV_B`, `HMAC_SECRET_UNIV_C`).
+> 2. Pada antarmuka visual Simulator, nilai secret dimasking secara default (`••••••••`) dengan tombol *toggle* mata 👁️ untuk kepatuhan *clean desk* saat *screen sharing* wawancara Tahap 2.
+> 3. Penguji dapat menggunakan secret default lokal untuk keperluan evaluasi atau mengubahnya melalui file `.env`.
+> 4. Daftar teks secret HMAC resmi untuk ketiga institusi dikirimkan terpisah melalui email submission resmi (lihat template di bawah).
+
+---
+
+## 📧 Draf Email Pengumpulan Tes (Submission Template)
+
+Reviewer dapat menyalin format email di bawah ini untuk pengiriman resmi sebelum tenggat waktu:
+
+```text
+Kepada: nur.arifah@sevima.com, careers@sevima.com, alfian@sevima.com, mahendri@sevima.com
+Subjek: [Nama Anda] TaskSE- SEVIMA
+
+Yth. Tim Rekrutmen & Penilai Teknis SEVIMA,
+
+Berikut saya sampaikan tautan repositori penyelesaian Tes Teknis Software Engineer (Project M2: Integrasi Pembayaran UKT via Webhook):
+
+- Tautan Repositori: [URL Repositori GitHub/GitLab Anda]
+- Tautan Mock Gateway Simulator: http://localhost:8000/simulator
+- Dokumentasi Endpoint Webhook: http://localhost:8000/simulator (In-App) atau file WEBHOOK_DOCS.md
+
+Sesuai instruksi soal ("Secret HMAC mohon dikirim terpisah melalui email dan tidak boleh tertulis di repositori"), berikut adalah kredensial secret HMAC untuk 3 institusi pengujian:
+1. Universitas Negeri Gadjah Sakti (UNIV-A) : secret_univ_a_98fbc12a
+2. Institut Teknologi Nusantara (UNIV-B)     : secret_univ_b_77ea410d
+3. Politeknik Harapan Bangsa (UNIV-C)        : secret_univ_c_13cd99fa
+
+Aplikasi dapat dijalankan secara instan dengan 1 perintah:
+$ docker compose up --build
+
+Akun demo untuk masing-masing role (Admin Keuangan & Mahasiswa) telah terpasang dengan fitur 1-Klik Quick Login pada http://localhost:8000/login.
+
+Terima kasih atas kesempatan yang diberikan.
+
+Salam hormat,
+[Nama Anda]
+```
 
 ---
 
 ## 🧪 Menjalankan Automated Test Suite
 
-Aplikasi dilengkapi dengan **33 unit dan feature tests** yang mencakup logika bisnis inti dan pengujian isolasi multi-tenant:
+Aplikasi dilengkapi dengan **36 unit dan feature tests** yang mencakup logika bisnis inti, isolasi multi-tenant, dan format payload bilingual:
 
 ```bash
 php artisan test

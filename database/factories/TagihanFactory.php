@@ -33,6 +33,13 @@ class TagihanFactory extends Factory
         ];
     }
 
+    public function belumBayar(): static
+    {
+        return $this->state(fn () => [
+            'status' => Tagihan::STATUS_BELUM_BAYAR,
+        ]);
+    }
+
     public function lunas(): static
     {
         return $this->state(fn () => [

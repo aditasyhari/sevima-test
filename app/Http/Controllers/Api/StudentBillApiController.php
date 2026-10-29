@@ -11,31 +11,42 @@ use Illuminate\Http\Request;
 class StudentBillApiController extends Controller
 {
     /**
-     * Get billing status and transaction history for a specific student.
+     * Get billing status and transaction history for a specific student (by UUID or NIM).
      */
     public function show(Request $request, string $studentId): JsonResponse
     {
         $student = User::withoutGlobalScope('institution')
             ->with('institusi')
-            ->where('id', $studentId)
             ->where('role', 'mahasiswa')
+            ->where(function ($query) use ($studentId) {
+                $query->where('id', $studentId)
+                    ->orWhere('nim', $studentId);
+            })
             ->first();
 
         if (! $student) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Mahasiswa tidak ditemukan.',
+                'message' => "Mahasiswa dengan identifier '{$studentId}' (ID atau NIM) tidak ditemukan.",
             ], 404);
         }
 
-        // Get bills for this student
-        $bills = Tagihan::withoutGlobalScope('institution')
+        // Get bills for this student with optional filters
+        $billsQuery = Tagihan::withoutGlobalScope('institution')
             ->with(['riwayatTransaksis' => function ($q) {
                 $q->latest('waktu_transaksi');
             }])
-            ->where('mahasiswa_id', $student->id)
-            ->orderByDesc('created_at')
-            ->get();
+            ->where('mahasiswa_id', $student->id);
+
+        if ($request->filled('status')) {
+            $billsQuery->where('status', $request->query('status'));
+        }
+
+        if ($request->filled('semester')) {
+            $billsQuery->where('semester', $request->query('semester'));
+        }
+
+        $bills = $billsQuery->orderByDesc('created_at')->get();
 
         // Check KRS Clearance (Lunas on latest semester bill)
         $activeBill = $bills->first();

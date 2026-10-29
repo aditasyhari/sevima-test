@@ -51,8 +51,9 @@ class PaymentWebhookController extends Controller
             ], 400);
         }
 
-        $institutionCode = $payload['institution_code'] ?? null;
-        $event = $payload['event'] ?? null;
+        // Dukungan field bilingual (English & Bahasa Indonesia)
+        $institutionCode = $payload['institution_code'] ?? $payload['kode_institusi'] ?? $payload['institusi'] ?? null;
+        $event = $payload['event'] ?? $payload['jenis_event'] ?? null;
 
         // 2. Resolve institution
         $institusi = $institutionCode

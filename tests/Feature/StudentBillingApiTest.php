@@ -43,3 +43,34 @@ test('student billing endpoint returns bills and transaction history', function 
     $response->assertJsonPath('data.tagihan_list.0.nomor_tagihan', 'TAG-API-001');
     $response->assertJsonPath('data.tagihan_list.0.riwayat_transaksi.0.referensi_gateway', 'GATEWAY-API-99');
 });
+
+test('student billing endpoint supports querying by student NIM', function () {
+    $univA = Institusi::factory()->create(['kode' => 'UNIV-A']);
+    $student = User::factory()->create([
+        'institusi_id' => $univA->id,
+        'role' => 'mahasiswa',
+        'name' => 'Budi Santoso',
+        'nim' => '2024010001',
+    ]);
+
+    Tagihan::factory()->belumBayar()->create([
+        'institusi_id' => $univA->id,
+        'mahasiswa_id' => $student->id,
+        'nomor_tagihan' => 'TAG-NIM-001',
+    ]);
+
+    $response = $this->getJson('/api/v1/students/2024010001/bills');
+
+    $response->assertStatus(200);
+    $response->assertJsonPath('status', 'success');
+    $response->assertJsonPath('data.mahasiswa.nim', '2024010001');
+    $response->assertJsonPath('data.krs_status.is_eligible', false);
+    $response->assertJsonPath('data.tagihan_list.0.nomor_tagihan', 'TAG-NIM-001');
+});
+
+test('student billing endpoint returns 404 for unknown student', function () {
+    $response = $this->getJson('/api/v1/students/UNKNOWN_ID_OR_NIM/bills');
+
+    $response->assertStatus(404);
+    $response->assertJsonPath('status', 'error');
+});

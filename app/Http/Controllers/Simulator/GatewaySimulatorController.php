@@ -21,25 +21,30 @@ class GatewaySimulatorController extends Controller
     /**
      * Display Mock Payment Gateway Simulator.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $institutions = Institusi::select('id', 'kode', 'nama', 'webhook_secret')
             ->with(['tagihans' => function ($q) {
                 $q->with('mahasiswa:id,name,nim')
                     ->latest('created_at')
-                    ->limit(10);
+                    ->limit(20);
             }])
             ->get();
 
         $recentAuditLogs = WebhookAuditLog::with('institusi:id,kode,nama')
             ->latest('created_at')
-            ->limit(15)
+            ->limit(20)
             ->get();
 
         return Inertia::render('Simulator/Index', [
             'institutions' => $institutions,
             'recentLogs' => $recentAuditLogs,
             'webhookUrl' => url('/api/v1/webhook/payment'),
+            'initialSelection' => [
+                'institusi_id' => $request->query('institusi_id'),
+                'tagihan_id' => $request->query('tagihan_id'),
+                'event' => $request->query('event', 'payment.success'),
+            ],
         ]);
     }
 

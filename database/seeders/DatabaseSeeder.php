@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $univA = Institusi::create([
             'kode' => 'UNIV-A',
             'nama' => 'Universitas Negeri Gadjah Sakti',
-            'webhook_secret' => 'secret_univ_a_98fbc12a',
+            'webhook_secret' => env('HMAC_SECRET_UNIV_A', 'secret_univ_a_98fbc12a'),
         ]);
 
         $adminA = User::create([
@@ -136,7 +136,7 @@ class DatabaseSeeder extends Seeder
         $univB = Institusi::create([
             'kode' => 'UNIV-B',
             'nama' => 'Institut Teknologi Nusantara',
-            'webhook_secret' => 'secret_univ_b_77ea410d',
+            'webhook_secret' => env('HMAC_SECRET_UNIV_B', 'secret_univ_b_77ea410d'),
         ]);
 
         $adminB = User::create([
@@ -177,7 +177,7 @@ class DatabaseSeeder extends Seeder
         $univC = Institusi::create([
             'kode' => 'UNIV-C',
             'nama' => 'Politeknik Harapan Bangsa',
-            'webhook_secret' => 'secret_univ_c_13cd99fa',
+            'webhook_secret' => env('HMAC_SECRET_UNIV_C', 'secret_univ_c_13cd99fa'),
         ]);
 
         $adminC = User::create([

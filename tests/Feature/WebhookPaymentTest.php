@@ -174,3 +174,44 @@ test('event payment.expired does not override an already paid bill', function ()
     $tagihan->refresh();
     expect($tagihan->status)->toBe(Tagihan::STATUS_LUNAS);
 });
+
+test('webhook accepts indonesian alias field names', function () {
+    $secret = 'secret_indonesia_bilingual';
+    $univA = Institusi::factory()->create([
+        'kode' => 'UNIV-INA',
+        'webhook_secret' => $secret,
+    ]);
+
+    $student = User::factory()->create(['institusi_id' => $univA->id, 'role' => 'mahasiswa']);
+    $tagihan = Tagihan::factory()->belumBayar()->create([
+        'institusi_id' => $univA->id,
+        'mahasiswa_id' => $student->id,
+        'nomor_tagihan' => 'TAG-INA-001',
+        'nominal' => 3500000.00,
+    ]);
+
+    // Payload in Bahasa Indonesia fields
+    $payload = [
+        'event' => 'payment.success',
+        'kode_institusi' => 'UNIV-INA',
+        'nomor_tagihan' => 'TAG-INA-001',
+        'nominal' => 3500000.00,
+        'referensi_gateway' => 'TRX-INA-9988',
+        'waktu_transaksi' => now()->toIso8601String(),
+    ];
+
+    $rawPayload = json_encode($payload);
+    $signature = hash_hmac('sha256', $rawPayload, $secret);
+
+    $response = $this->withServerVariables([
+        'HTTP_X_SIGNATURE' => $signature,
+        'CONTENT_TYPE' => 'application/json',
+    ])->call('POST', '/api/v1/webhook/payment', [], [], [], [], $rawPayload);
+
+    $response->assertStatus(200);
+    $response->assertJsonPath('status', 'success');
+
+    $tagihan->refresh();
+    expect($tagihan->status)->toBe(Tagihan::STATUS_LUNAS);
+    expect(RiwayatTransaksi::where('referensi_gateway', 'TRX-INA-9988')->exists())->toBeTrue();
+});

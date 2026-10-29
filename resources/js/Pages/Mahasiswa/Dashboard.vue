@@ -1,5 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import RetroNavbar from '@/Components/Organisms/RetroNavbar.vue';
 import StudentHeroBillCard from '@/Components/Organisms/StudentHeroBillCard.vue';
 import KrsStatusBadgeCard from '@/Components/Molecules/KrsStatusBadgeCard.vue';
@@ -13,6 +14,14 @@ defineProps({
     active_bill: Object,
     past_bills: Array,
 });
+
+const selectedPastBill = ref(null);
+const showPastModal = ref(false);
+
+const openPastBillModal = (bill) => {
+    selectedPastBill.value = bill;
+    showPastModal.value = true;
+};
 </script>
 
 <template>
@@ -85,11 +94,19 @@ defineProps({
                                     </span>
                                 </div>
 
-                                <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-3">
                                     <span class="font-bold text-sm text-neutral-900">
                                         <RupiahFormat :value="past.nominal" />
                                     </span>
                                     <RetroBadge :status="past.status" />
+                                    <button
+                                        type="button"
+                                        @click="openPastBillModal(past)"
+                                        class="px-2.5 py-1 rounded-xl border-1.5 border-neutral-900 bg-white hover:bg-retro-yellow text-xs font-bold transition-all shadow-retro-sm cursor-pointer"
+                                        title="Lihat Log Riwayat Transaksi"
+                                    >
+                                        📜 Log
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -117,6 +134,40 @@ defineProps({
                 </div>
             </div>
         </main>
+
+        <!-- Past Bill Transaction Modal -->
+        <div
+            v-if="showPastModal && selectedPastBill"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/60 backdrop-blur-xs"
+            @click.self="showPastModal = false"
+        >
+            <div class="bg-white rounded-3xl border-2 border-neutral-900 shadow-retro-lg max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                <div class="p-5 border-b-1.5 border-neutral-900 bg-retro-bg flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-extrabold text-neutral-900 font-retro">
+                            Riwayat Transaksi {{ selectedPastBill.semester }}
+                        </h3>
+                        <p class="text-xs text-neutral-600 font-mono">
+                            {{ selectedPastBill.nomor_tagihan }} • <RupiahFormat :value="selectedPastBill.nominal" />
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        @click="showPastModal = false"
+                        class="w-8 h-8 rounded-full border-1.5 border-neutral-900 bg-white hover:bg-neutral-100 flex items-center justify-center font-bold text-sm shadow-retro-sm cursor-pointer"
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                <div class="p-6">
+                    <TransactionLedgerList
+                        :transactions="selectedPastBill.riwayat_transaksi || []"
+                        :title="`Log Transaksi (${selectedPastBill.nomor_tagihan})`"
+                    />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

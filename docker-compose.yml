@@ -21,6 +21,9 @@ services:
       SESSION_DRIVER: "database"
       CACHE_STORE: "database"
       QUEUE_CONNECTION: "database"
+      HMAC_SECRET_UNIV_A: "${HMAC_SECRET_UNIV_A:-secret_univ_a_98fbc12a}"
+      HMAC_SECRET_UNIV_B: "${HMAC_SECRET_UNIV_B:-secret_univ_b_77ea410d}"
+      HMAC_SECRET_UNIV_C: "${HMAC_SECRET_UNIV_C:-secret_univ_c_13cd99fa}"
     depends_on:
       db:
         condition: service_healthy
