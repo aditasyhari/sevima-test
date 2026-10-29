@@ -31,7 +31,7 @@ class PaymentWebhookController extends Controller
 
         // 1. Parse JSON payload securely
         $payload = json_decode($rawPayload, true);
-        if (!is_array($payload)) {
+        if (! is_array($payload)) {
             $this->recordAuditAction->execute(
                 institusiId: null,
                 kodeInstitusiPayload: null,
@@ -59,7 +59,7 @@ class PaymentWebhookController extends Controller
             ? Institusi::where('kode', $institutionCode)->first()
             : null;
 
-        if (!$institusi) {
+        if (! $institusi) {
             $this->recordAuditAction->execute(
                 institusiId: null,
                 kodeInstitusiPayload: $institutionCode,
@@ -86,7 +86,7 @@ class PaymentWebhookController extends Controller
             secret: $institusi->webhook_secret
         );
 
-        if (!$isSignatureValid) {
+        if (! $isSignatureValid) {
             $this->recordAuditAction->execute(
                 institusiId: $institusi->id,
                 kodeInstitusiPayload: $institutionCode,
@@ -143,12 +143,12 @@ class PaymentWebhookController extends Controller
                 signatureHeader: $signatureHeader,
                 isSignatureValid: true,
                 responseCode: 500,
-                processingNotes: 'Internal Error: ' . $e->getMessage()
+                processingNotes: 'Internal Error: '.$e->getMessage()
             );
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan sistem internal: ' . $e->getMessage(),
+                'message' => 'Terjadi kesalahan sistem internal: '.$e->getMessage(),
             ], 500);
         }
     }

@@ -16,6 +16,7 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }
+
     return redirect()->route('login');
 });
 
@@ -24,6 +25,7 @@ Route::get('/dashboard', function () {
     if (auth()->user()->isAdminKeuangan()) {
         return redirect()->route('admin.tagihan.index');
     }
+
     return redirect()->route('mahasiswa.dashboard');
 })->middleware(['auth'])->name('dashboard');
 

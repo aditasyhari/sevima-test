@@ -26,8 +26,8 @@ class GatewaySimulatorController extends Controller
         $institutions = Institusi::select('id', 'kode', 'nama', 'webhook_secret')
             ->with(['tagihans' => function ($q) {
                 $q->with('mahasiswa:id,name,nim')
-                  ->latest('created_at')
-                  ->limit(10);
+                    ->latest('created_at')
+                    ->limit(10);
             }])
             ->get();
 

@@ -23,12 +23,12 @@ class TagihanFactory extends Factory
                 'institusi_id' => $attributes['institusi_id'],
                 'role' => 'mahasiswa',
             ])->id,
-            'nomor_tagihan' => 'TAG-' . fake()->unique()->numerify('#####'),
+            'nomor_tagihan' => 'TAG-'.fake()->unique()->numerify('#####'),
             'semester' => '2024/2025 Ganjil',
             'nominal' => fake()->randomElement([3500000.00, 4500000.00, 5000000.00]),
             'tanggal_kedaluwarsa' => Carbon::now()->addDays(14),
             'status' => Tagihan::STATUS_BELUM_BAYAR,
-            'virtual_account' => '8801' . fake()->numerify('##########'),
+            'virtual_account' => '8801'.fake()->numerify('##########'),
             'catatan' => 'Tagihan UKT Reguler',
         ];
     }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RiwayatTransaksi extends Model
 {
-    use HasFactory, HasUuidV7, BelongsToInstitution;
+    use BelongsToInstitution, HasFactory, HasUuidV7;
 
     protected $fillable = [
         'tagihan_id',

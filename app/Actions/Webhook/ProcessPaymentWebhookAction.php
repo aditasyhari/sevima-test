@@ -14,14 +14,13 @@ class ProcessPaymentWebhookAction
     /**
      * Process payment webhook event with pessimistic lock and idempotency safeguards.
      *
-     * @param Institusi $institusi
-     * @param array $payload
      * @return array [
-     *     'status' => 'success' | 'ignored',
-     *     'message' => string,
-     *     'tagihan' => Tagihan,
-     *     'http_code' => int
-     * ]
+     *               'status' => 'success' | 'ignored',
+     *               'message' => string,
+     *               'tagihan' => Tagihan,
+     *               'http_code' => int
+     *               ]
+     *
      * @throws \Exception
      */
     public function execute(Institusi $institusi, array $payload): array
@@ -29,7 +28,7 @@ class ProcessPaymentWebhookAction
         $event = $payload['event'] ?? null;
         $billNumber = $payload['bill_number'] ?? null;
         $amount = isset($payload['amount']) ? (float) $payload['amount'] : 0.0;
-        $reference = $payload['transaction_reference'] ?? ('REF-' . uniqid());
+        $reference = $payload['transaction_reference'] ?? ('REF-'.uniqid());
         $paymentTime = isset($payload['payment_time']) ? Carbon::parse($payload['payment_time']) : Carbon::now();
 
         if (empty($event) || empty($billNumber)) {
@@ -46,7 +45,7 @@ class ProcessPaymentWebhookAction
                 ->lockForUpdate()
                 ->first();
 
-            if (!$tagihan) {
+            if (! $tagihan) {
                 return [
                     'status' => 'error',
                     'message' => "Tagihan dengan nomor {$billNumber} tidak ditemukan pada institusi {$institusi->kode}.",
@@ -101,8 +100,8 @@ class ProcessPaymentWebhookAction
                 ]);
 
                 $note = $previousStatus === Tagihan::STATUS_KEDALUWARSA
-                    ? "Pembayaran berhasil diterima untuk tagihan yang sebelumnya kedaluwarsa. Status diubah menjadi Lunas."
-                    : "Pembayaran berhasil diverifikasi. Status tagihan diubah menjadi Lunas.";
+                    ? 'Pembayaran berhasil diterima untuk tagihan yang sebelumnya kedaluwarsa. Status diubah menjadi Lunas.'
+                    : 'Pembayaran berhasil diverifikasi. Status tagihan diubah menjadi Lunas.';
 
                 return [
                     'status' => 'success',
@@ -120,7 +119,7 @@ class ProcessPaymentWebhookAction
                 if ($tagihan->isLunas()) {
                     return [
                         'status' => 'ignored',
-                        'message' => "Event payment.expired diabaikan karena tagihan sudah lunas.",
+                        'message' => 'Event payment.expired diabaikan karena tagihan sudah lunas.',
                         'tagihan' => $tagihan,
                         'http_code' => 200,
                     ];

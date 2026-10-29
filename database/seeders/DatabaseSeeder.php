@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
             'nominal' => 4500000.00,
             'tanggal_kedaluwarsa' => Carbon::now()->addDays(14),
             'status' => Tagihan::STATUS_BELUM_BAYAR,
-            'virtual_account' => '8801' . $mhsA1->nim,
+            'virtual_account' => '8801'.$mhsA1->nim,
             'catatan' => 'UKT Semester 5 Reguler',
         ]);
 
@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
             'nominal' => 4500000.00,
             'tanggal_kedaluwarsa' => Carbon::now()->subMonths(6),
             'status' => Tagihan::STATUS_LUNAS,
-            'virtual_account' => '8801' . $mhsA1->nim,
+            'virtual_account' => '8801'.$mhsA1->nim,
             'catatan' => 'UKT Semester 4 Reguler',
         ]);
 
@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
             'nominal' => 3800000.00,
             'tanggal_kedaluwarsa' => Carbon::now()->addDays(10),
             'status' => Tagihan::STATUS_LUNAS,
-            'virtual_account' => '8801' . $mhsA2->nim,
+            'virtual_account' => '8801'.$mhsA2->nim,
             'catatan' => 'UKT Semester 3 Reguler',
         ]);
 
@@ -162,7 +162,7 @@ class DatabaseSeeder extends Seeder
             'nominal' => 5200000.00,
             'tanggal_kedaluwarsa' => Carbon::now()->addDays(20),
             'status' => Tagihan::STATUS_BELUM_BAYAR,
-            'virtual_account' => '8802' . $mhsB1->nim,
+            'virtual_account' => '8802'.$mhsB1->nim,
             'catatan' => 'UKT Semester 5 ITN',
         ]);
 
@@ -203,7 +203,7 @@ class DatabaseSeeder extends Seeder
             'nominal' => 3200000.00,
             'tanggal_kedaluwarsa' => Carbon::now()->subDays(5),
             'status' => Tagihan::STATUS_KEDALUWARSA,
-            'virtual_account' => '8803' . $mhsC1->nim,
+            'virtual_account' => '8803'.$mhsC1->nim,
             'catatan' => 'UKT Semester 4 Poltek (Expired)',
         ]);
     }

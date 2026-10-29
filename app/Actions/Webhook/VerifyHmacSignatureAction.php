@@ -2,16 +2,14 @@
 
 namespace App\Actions\Webhook;
 
-use App\Models\Institusi;
-
 class VerifyHmacSignatureAction
 {
     /**
      * Verify HMAC-SHA256 signature for an institution.
      *
-     * @param string $rawPayload The exact raw request body.
-     * @param string $signature The provided signature from X-Signature header.
-     * @param string $secret The institution's private HMAC secret.
+     * @param  string  $rawPayload  The exact raw request body.
+     * @param  string  $signature  The provided signature from X-Signature header.
+     * @param  string  $secret  The institution's private HMAC secret.
      * @return bool True if signature matches, false otherwise.
      */
     public function execute(string $rawPayload, string $signature, string $secret): bool

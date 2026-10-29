@@ -1,58 +1,130 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SEVIMA UKT Payment Webhook Gateway (Project M2)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Penagihan UKT (*Uang Kuliah Tunggal*) Multi-Kampus berbasis **Laravel 13, Inertia.js (Vue 3), dan PostgreSQL** dengan integrasi notifikasi pembayaran Payment Gateway via webhook aman berbasis HMAC-SHA256, penentuan hak akses KRS mahasiswa, dan audit trail lengkap.
 
-## About Laravel
+Project ini dibuat untuk memenuhi **Tes Teknis Software Engineer SEVIMA (Jalur Middle/Senior - Project M2)**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Cara Menjalankan Aplikasi (Docker 1-Command)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Aplikasi telah dikonfigurasi penuh dengan Docker Compose multi-stage build. Reviewer cukup menjalankan **satu perintah** dari direktori root project:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+docker compose up --build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Setelah proses build selesai, buka browser Anda:
+- **Aplikasi Web:** [http://localhost:8000](http://localhost:8000)
+- **Mock Payment Gateway Simulator:** [http://localhost:8000/simulator](http://localhost:8000/simulator)
+- **API Endpoint Mahasiswa:** `GET http://localhost:8000/api/v1/students/{studentId}/bills`
+- **Webhook Receiver Endpoint:** `POST http://localhost:8000/api/v1/webhook/payment`
 
-## Contributing
+> **Otomatisasi Startup Container:** Container `app` akan otomatis menunggu database PostgreSQL siap, menjalankan migrasi database, men-seed 3 institusi dan akun demo, mengompilasi asset Vue 3 Vite, mengoptimalkan konfigurasi cache, dan menyalakan server Nginx + PHP-FPM.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 💻 Alternatif: Menjalankan di Lingkungan Lokal (Tanpa Docker)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Jika Anda ingin menjalankan secara native pada mesin host yang sudah memiliki PHP 8.3+, Composer, Node.js, dan PostgreSQL:
 
-## Security Vulnerabilities
+```bash
+# 1. Install dependensi backend & frontend
+composer install
+npm install
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 2. Setup environment & database
+cp .env.example .env
+php artisan key:generate
 
-## License
+# Konfigurasi koneksi database PostgreSQL di file .env Anda:
+# DB_CONNECTION=pgsql
+# DB_HOST=127.0.0.1
+# DB_PORT=5432
+# DB_DATABASE=sevima_ukt
+# DB_USERNAME=postgres
+# DB_PASSWORD=your_password
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# 3. Jalankan migrasi dan seeder data
+php artisan migrate:fresh --seed
+
+# 4. Build asset frontend & jalankan server
+npm run build
+php artisan serve
+```
+
+---
+
+## 👥 Matriks Akun Demo & Institusi
+
+Database telah di-seed dengan **3 institusi berbeda**, lengkap dengan akun demo untuk masing-masing role:
+
+> **Fitur Quick Demo Login:** Pada halaman login ([http://localhost:8000/login](http://localhost:8000/login)), telah disediakan tombol **1-Klik Login** untuk setiap akun di bawah ini tanpa perlu mengetik email & password secara manual.
+
+| Institusi | Kode | Peran (Role) | Nama Pengguna | Email | Password |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Univ. Negeri Gadjah Sakti** | `UNIV-A` | Admin Keuangan | Admin Gadjah Sakti | `admin.univa@sevima.test` | `password` |
+| | | Mahasiswa (Aktif) | Budi Santoso (NIM: 2024010001) | `budi.univa@sevima.test` | `password` |
+| | | Mahasiswa (Lunas) | Siti Nurhaliza (NIM: 2024010002) | `siti.univa@sevima.test` | `password` |
+| **Inst. Teknologi Nusantara** | `UNIV-B` | Admin Keuangan | Admin Keuangan ITN | `admin.univb@sevima.test` | `password` |
+| | | Mahasiswa | Andi Pratama (NIM: 2024020001) | `andi.univb@sevima.test` | `password` |
+| **Poltek Harapan Bangsa** | `UNIV-C` | Admin Keuangan | Admin Poltek Harapan | `admin.univc@sevima.test` | `password` |
+| | | Mahasiswa | Maya Anggraini (NIM: 2024030001) | `maya.univc@sevima.test` | `password` |
+
+### Secret HMAC per Institusi:
+- **UNIV-A:** `secret_univ_a_98fbc12a`
+- **UNIV-B:** `secret_univ_b_77ea410d`
+- **UNIV-C:** `secret_univ_c_13cd99fa`
+
+---
+
+## 🧪 Menjalankan Automated Test Suite
+
+Aplikasi dilengkapi dengan **33 unit dan feature tests** yang mencakup logika bisnis inti dan pengujian isolasi multi-tenant:
+
+```bash
+php artisan test
+```
+
+### Lingkup Test Otomatis:
+1. **`MultiTenantIsolationTest.php`:**
+   - Memastikan Admin Institusi A **tidak dapat melihat** tagihan milik Institusi B.
+   - Memastikan nomor tagihan yang sama (`TAG-IDENTIK-01`) **dapat ada bersamaan** di Institusi A dan B (pembuktian *composite unique index* `[institusi_id, nomor_tagihan]`).
+   - Memastikan Admin Institusi A **gagal menerbitkan tagihan** untuk mahasiswa Institusi B.
+2. **`WebhookPaymentTest.php`:**
+   - Notifikasi valid dengan HMAC-SHA256 yang benar berhasil mengubah status menjadi `lunas`, mencatat riwayat transaksi, dan menuliskan audit log.
+   - Notifikasi dengan signature yang dimanipulasi (*tampered*) ditolak dengan HTTP 401 Unauthorized dan kegagalan dicatat di audit log.
+   - Pengujian **Idempotency**: pengiriman event `payment.success` berulang tidak menyebabkan *double-credit* atau duplikasi ledger.
+   - Pengujian **Out-of-Order**: event `payment.expired` yang datang terlambat diabaikan jika tagihan sudah berstatus `lunas`.
+3. **`StudentBillingApiTest.php`:**
+   - Memverifikasi endpoint status tagihan, status kelayakan KRS, dan riwayat transaksi mahasiswa.
+
+---
+
+## 🛠️ Mock Payment Gateway Simulator
+
+Sesuai ketentuan soal, kami menyediakan modul Mock Payment Gateway interaktif di URL `/simulator`:
+1. Buka [http://localhost:8000/simulator](http://localhost:8000/simulator).
+2. Pilih institusi kampus, pilih tagihan mahasiswa, dan pilih event (`payment.success` atau `payment.expired`).
+3. Opsi **"Uji Keamanan (Tamper Signature)"** dapat dicentang untuk menguji penolakan signature palsu.
+4. Klik tombol kirim untuk melihat inspeksi payload, kalkulasi `X-Signature`, dan live response secara seketika.
+5. Tabel **Audit Log Real-Time** di bagian bawah secara otomatis merekam setiap transaksi yang masuk.
+
+Dokumentasi lengkap format payload, event, dan contoh cURL dapat dibaca di **[WEBHOOK_DOCS.md](./WEBHOOK_DOCS.md)**.
+
+---
+
+## 📑 Asumsi Bisnis & Teknis
+
+1. **Kebijakan Pembayaran Kedaluwarsa (Forgiving Late Settlement):** Jika mahasiswa melakukan pembayaran dan payment gateway berhasil mendebit dana saat tagihan sudah berstatus `kedaluwarsa`, sistem tetap menerima notifikasi `payment.success` dan mengubah status menjadi `lunas` dengan catatan audit khusus, agar hak akademik mahasiswa (KRS) tidak dirugikan sepihak.
+2. **Single Database Row-Level Multi-Tenancy:** Dipilih model arsitektur *Single Database dengan Row-Level Scoping* (`institusi_id`) karena paling hemat resource, mudah di-maintenance, dan efisien untuk melayani ratusan institusi perguruan tinggi.
+3. **Primary Key UUIDv7:** Seluruh primary key menggunakan PostgreSQL native `UUID` dengan generator `UUIDv7` (RFC 9562) untuk mencegah kebocoran IDOR dan menjaga performa index B-tree tetap optimal setara auto-increment integer.
+
+---
+
+## 📂 Artefak Wajib Project
+
+- **[ANTIGRAVITY.md](./ANTIGRAVITY.md)** / **[CLAUDE.md](./CLAUDE.md)**: Konteks project, aturan bisnis multi-institusi, konvensi kode, dan batasan AI.
+- **[AI_NOTES.md](./AI_NOTES.md)**: Refleksi pengerjaan pairing bersama AI assistant (hal yang dikerjakan bersama AI, saran AI yang dikoreksi/ditolak, dan evaluasi).
+- **[DECISIONS.md](./DECISIONS.md)**: 5 Catatan Keputusan Arsitektur (*Architectural Decision Records / ADRs*).
+- **[WEBHOOK_DOCS.md](./WEBHOOK_DOCS.md)**: Dokumentasi format payload, signature, event, dan respon webhook gateway.

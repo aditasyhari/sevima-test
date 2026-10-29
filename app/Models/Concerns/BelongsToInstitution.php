@@ -16,7 +16,7 @@ trait BelongsToInstitution
     {
         static::addGlobalScope('institution', function (Builder $builder) {
             if (Auth::check() && Auth::user()->institusi_id) {
-                $builder->where($builder->getModel()->getTable() . '.institusi_id', Auth::user()->institusi_id);
+                $builder->where($builder->getModel()->getTable().'.institusi_id', Auth::user()->institusi_id);
             }
         });
 

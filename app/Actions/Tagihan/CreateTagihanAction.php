@@ -16,7 +16,7 @@ class CreateTagihanAction
     {
         $institusiId = $institusiId ?? auth()->user()?->institusi_id;
 
-        if (!$institusiId) {
+        if (! $institusiId) {
             throw ValidationException::withMessages([
                 'institusi_id' => 'Institusi wajib ditentukan.',
             ]);
@@ -29,7 +29,7 @@ class CreateTagihanAction
             ->where('role', 'mahasiswa')
             ->first();
 
-        if (!$mahasiswa) {
+        if (! $mahasiswa) {
             throw ValidationException::withMessages([
                 'mahasiswa_id' => 'Mahasiswa tidak ditemukan atau bukan milik institusi ini.',
             ]);
@@ -47,7 +47,7 @@ class CreateTagihanAction
             ]);
         }
 
-        $virtualAccount = '88' . str_pad((string) mt_rand(10, 99), 2, '0', STR_PAD_LEFT) . ($mahasiswa->nim ?? '000000');
+        $virtualAccount = '88'.str_pad((string) mt_rand(10, 99), 2, '0', STR_PAD_LEFT).($mahasiswa->nim ?? '000000');
 
         return Tagihan::create([
             'institusi_id' => $institusiId,

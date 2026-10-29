@@ -21,7 +21,7 @@ class StudentBillApiController extends Controller
             ->where('role', 'mahasiswa')
             ->first();
 
-        if (!$student) {
+        if (! $student) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Mahasiswa tidak ditemukan.',

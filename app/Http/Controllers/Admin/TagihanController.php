@@ -37,10 +37,10 @@ class TagihanController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('nomor_tagihan', 'ilike', "%{$search}%")
-                  ->orWhereHas('mahasiswa', function ($mQuery) use ($search) {
-                      $mQuery->where('name', 'ilike', "%{$search}%")
-                             ->orWhere('nim', 'ilike', "%{$search}%");
-                  });
+                    ->orWhereHas('mahasiswa', function ($mQuery) use ($search) {
+                        $mQuery->where('name', 'ilike', "%{$search}%")
+                            ->orWhere('nim', 'ilike', "%{$search}%");
+                    });
             });
         }
 

@@ -28,7 +28,7 @@ class MockPaymentGatewayService
             'institution_code' => $institusi->kode,
             'bill_number' => $tagihan->nomor_tagihan,
             'amount' => $customAmount ?? (float) $tagihan->nominal,
-            'transaction_reference' => 'MOCK-' . strtoupper(substr(md5(uniqid()), 0, 10)),
+            'transaction_reference' => 'MOCK-'.strtoupper(substr(md5(uniqid()), 0, 10)),
             'payment_time' => Carbon::now()->toIso8601String(),
         ];
     }
@@ -55,9 +55,9 @@ class MockPaymentGatewayService
             'X-Signature' => $signature,
             'User-Agent' => 'SEVIMA-Mock-Payment-Gateway/1.0',
         ])
-        ->timeout(10)
-        ->withBody($jsonPayload, 'application/json')
-        ->post($targetUrl);
+            ->timeout(10)
+            ->withBody($jsonPayload, 'application/json')
+            ->post($targetUrl);
 
         return [
             'sent_payload' => $payload,

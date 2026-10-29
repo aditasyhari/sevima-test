@@ -11,10 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tagihan extends Model
 {
-    use HasFactory, HasUuidV7, BelongsToInstitution;
+    use BelongsToInstitution, HasFactory, HasUuidV7;
 
     public const STATUS_BELUM_BAYAR = 'belum_bayar';
+
     public const STATUS_LUNAS = 'lunas';
+
     public const STATUS_KEDALUWARSA = 'kedaluwarsa';
 
     protected $fillable = [

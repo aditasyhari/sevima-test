@@ -15,12 +15,12 @@ class InstitusiFactory extends Factory
 
     public function definition(): array
     {
-        $code = 'UNIV-' . strtoupper(Str::random(4));
+        $code = 'UNIV-'.strtoupper(Str::random(4));
 
         return [
             'kode' => $code,
-            'nama' => 'Universitas ' . fake()->company(),
-            'webhook_secret' => 'secret_' . Str::random(24),
+            'nama' => 'Universitas '.fake()->company(),
+            'webhook_secret' => 'secret_'.Str::random(24),
         ];
     }
 }

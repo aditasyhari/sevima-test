@@ -19,8 +19,8 @@ class DashboardController extends Controller
 
         // Scoped automatically to current student
         $bills = Tagihan::with(['riwayatTransaksis' => function ($q) {
-                $q->latest('waktu_transaksi');
-            }])
+            $q->latest('waktu_transaksi');
+        }])
             ->where('mahasiswa_id', $user->id)
             ->latest('created_at')
             ->get();
