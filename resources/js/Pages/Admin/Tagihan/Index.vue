@@ -214,3 +214,4 @@ const openHistoryModal = (tagihan) => {
         </div>
     </div>
 </template>
+

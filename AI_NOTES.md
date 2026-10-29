@@ -20,3 +20,4 @@
 ## Kalau mengulang dari awal, apa yang akan saya ubah
 - **Asynchronous Webhook Queue:** Pada implementasi saat ini, notifikasi webhook diproses secara sinkron langsung di dalam request handler HTTP untuk kemudahan demonstrasi lokal. Jika diulang dalam skala beban jutaan transaksi kampus, saya akan langsung memasukkan webhook ke antrian Redis/RabbitMQ (`DispatchWebhookJob`) dengan *dead-letter queue* (DLQ) dan *exponential backoff retry*.
 - **Audit Diffing Snapshot:** Menambahkan kolom `diff_changes` di tabel `webhook_audit_logs` untuk mencatat perbandingan nilai kolom *before* dan *after* status tagihan diubah, sehingga tim audit keuangan dapat melihat rekaman riwayat perubahan secara granular.
+

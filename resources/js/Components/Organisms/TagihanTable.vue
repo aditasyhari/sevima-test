@@ -123,3 +123,4 @@ defineEmits(['viewHistory']);
         </div>
     </div>
 </template>
+

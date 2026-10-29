@@ -45,3 +45,4 @@ class Institusi extends Model
         return $this->hasMany(WebhookAuditLog::class, 'institusi_id');
     }
 }
+

@@ -26,3 +26,4 @@ const formatted = computed(() => {
 <template>
     <span>{{ formatted }}</span>
 </template>
+

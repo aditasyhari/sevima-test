@@ -42,3 +42,4 @@ class WebhookAuditLog extends Model
         return $this->belongsTo(Institusi::class, 'institusi_id');
     }
 }
+

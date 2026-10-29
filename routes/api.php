@@ -25,3 +25,4 @@ Route::get('/v1/institutions', function () {
         'data' => Institusi::select('id', 'kode', 'nama')->get(),
     ]);
 });
+

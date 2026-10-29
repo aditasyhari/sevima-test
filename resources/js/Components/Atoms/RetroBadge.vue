@@ -51,3 +51,4 @@ const displayLabel = computed(() => {
         <slot>{{ displayLabel }}</slot>
     </span>
 </template>
+

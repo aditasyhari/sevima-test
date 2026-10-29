@@ -63,3 +63,4 @@ Aplikasi mengadopsi **Clean Architecture & Action/Service Pattern**:
 3. DILARANG menyimpan atau men-commit secret HMAC, credential database, atau API key ke repositori git (seluruh secret wajib dikonfigurasi lewat `.env` atau seeder).
 4. DILARANG mengabaikan verifikasi signature HMAC pada endpoint webhook `/api/v1/webhook/payment`.
 5. DILARANG mengubah tagihan yang sudah `lunas` menjadi `kedaluwarsa` saat menerima event `payment.expired`.
+

@@ -90,3 +90,4 @@ test('admin cannot create a bill for a student from another institution', functi
     $response->assertSessionHasErrors('mahasiswa_id');
     expect(Tagihan::where('nomor_tagihan', 'TAG-ATTEMPT-01')->exists())->toBeFalse();
 });
+

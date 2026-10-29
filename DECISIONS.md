@@ -97,3 +97,4 @@ Memilih **Opsi 3 (Dedicated Table `webhook_audit_logs`)**. Tindakan pencatatan a
 **Konsekuensi :**  
 - *Positif:* Tersedianya jejak forensik lengkap untuk kebutuhan analisis insiden di **Wawancara Tahap 2**. Tim penilai dapat langsung memeriksa log serangan/kegagalan signature di tabel audit atau melalui antarmuka **Mock Gateway Simulator**.
 - *Trade-off:* Ukuran tabel `webhook_audit_logs` akan terus bertambah. Di lingkungan production jangka panjang, tabel ini disarankan memiliki kebijakan partitioning bulanan atau auto-archiving.
+

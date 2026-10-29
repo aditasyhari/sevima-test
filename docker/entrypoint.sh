@@ -39,3 +39,4 @@ php artisan view:cache
 
 echo "=== Aplikasi Siap Dijalankan di Port 8000! ==="
 exec supervisord -c /etc/supervisor/conf.d/supervisord.conf
+
