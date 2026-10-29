@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sevima_ukt_app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      APP_NAME: "SEVIMA UKT Gateway"
+      APP_ENV: "production"
+      APP_DEBUG: "false"
+      APP_URL: "http://localhost:8000"
+      DB_CONNECTION: "pgsql"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_DATABASE: "sevima_ukt"
+      DB_USERNAME: "sevima_user"
+      DB_PASSWORD: "sevima_secret"
+      SESSION_DRIVER: "database"
+      CACHE_STORE: "database"
+      QUEUE_CONNECTION: "database"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - sevima_network
+
+  db:
+    image: postgres:16-alpine
+    container_name: sevima_ukt_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "sevima_ukt"
+      POSTGRES_USER: "sevima_user"
+      POSTGRES_PASSWORD: "sevima_secret"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sevima_user -d sevima_ukt"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - sevima_network
+
+networks:
+  sevima_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
