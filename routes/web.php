@@ -1,22 +1,46 @@
 <?php
 
+use App\Http\Controllers\Admin\TagihanController as AdminTagihanController;
+use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Simulator\GatewaySimulatorController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
 });
 
+// Central Dashboard Route (Dispatches to role-specific dashboard)
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    if (auth()->user()->isAdminKeuangan()) {
+        return redirect()->route('admin.tagihan.index');
+    }
+    return redirect()->route('mahasiswa.dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+// Admin Keuangan Routes
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/tagihan', [AdminTagihanController::class, 'index'])->name('tagihan.index');
+    Route::post('/tagihan', [AdminTagihanController::class, 'store'])->name('tagihan.store');
+});
+
+// Mahasiswa Routes
+Route::middleware(['auth'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
+    Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
+});
+
+// Mock Payment Gateway Simulator (Available for Evaluators & Demo)
+Route::get('/simulator', [GatewaySimulatorController::class, 'index'])->name('simulator.index');
+Route::post('/simulator/trigger', [GatewaySimulatorController::class, 'trigger'])->name('simulator.trigger');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
