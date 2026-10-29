@@ -1,4 +1,6 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
+
 defineProps({
     isEligible: {
         type: Boolean,
@@ -53,6 +55,26 @@ defineProps({
                         ? 'Tagihan UKT Anda telah lunas terverifikasi oleh Payment Gateway. Silakan lanjutkan pengisian mata kuliah pada portal KRS kampus.'
                         : 'Selesaikan pembayaran tagihan UKT aktif Anda untuk membuka gembok pengisian Kartu Rencana Studi.') }}
                 </p>
+
+                <!-- Direct Action Button to Access KRS -->
+                <div class="mt-4 pt-3 border-t border-neutral-900/10">
+                    <Link
+                        v-if="isEligible"
+                        :href="route('mahasiswa.krs.index')"
+                        class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-xl border-1.5 border-neutral-900 bg-neutral-900 text-white hover:bg-neutral-800 text-xs font-extrabold shadow-retro-sm transition-all"
+                    >
+                        <span>📝 Buka Lembar Rencana Studi (KRS)</span>
+                        <span>➔</span>
+                    </Link>
+                    <Link
+                        v-else
+                        :href="route('mahasiswa.krs.index')"
+                        class="inline-flex items-center justify-center gap-2 w-full px-4 py-2 rounded-xl border-1.5 border-neutral-900 bg-white/70 hover:bg-white text-neutral-800 text-xs font-bold transition-all shadow-retro-sm"
+                    >
+                        <span>🔒 Cek Keterangan Gembok KRS</span>
+                        <span>➔</span>
+                    </Link>
+                </div>
             </div>
         </div>
     </div>

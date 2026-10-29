@@ -49,9 +49,18 @@ const institusi = computed(() => user.value?.institusi);
                         v-if="user?.role === 'mahasiswa'"
                         :href="route('mahasiswa.dashboard')"
                         class="px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold border-1.5 border-neutral-900 transition-all"
-                        :class="route().current('mahasiswa.*') ? 'bg-retro-yellow text-neutral-900 shadow-retro-sm' : 'bg-white text-neutral-700 hover:bg-neutral-50'"
+                        :class="route().current('mahasiswa.dashboard') ? 'bg-retro-yellow text-neutral-900 shadow-retro-sm' : 'bg-white text-neutral-700 hover:bg-neutral-50'"
                     >
                         🎓 Status UKT
+                    </Link>
+
+                    <Link
+                        v-if="user?.role === 'mahasiswa'"
+                        :href="route('mahasiswa.krs.index')"
+                        class="px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold border-1.5 border-neutral-900 transition-all"
+                        :class="route().current('mahasiswa.krs.*') ? 'bg-retro-yellow text-neutral-900 shadow-retro-sm' : 'bg-white text-neutral-700 hover:bg-neutral-50'"
+                    >
+                        📝 Portal KRS
                     </Link>
 
                     <Link

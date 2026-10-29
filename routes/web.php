@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\TagihanController as AdminTagihanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
+use App\Http\Controllers\Mahasiswa\KrsController as MahasiswaKrsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Simulator\GatewaySimulatorController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 // Mahasiswa Routes
 Route::middleware(['auth'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/krs', [MahasiswaKrsController::class, 'index'])->name('krs.index');
 });
 
 // Mock Payment Gateway Simulator (Available for Evaluators & Demo)

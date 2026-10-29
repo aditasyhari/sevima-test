@@ -87,11 +87,25 @@ defineProps({
                 </div>
             </div>
 
-            <div v-else-if="bill.status === 'lunas'" class="flex items-center gap-3 p-4 rounded-xl bg-retro-green-light border-1.5 border-neutral-900">
-                <span class="text-2xl">🎉</span>
-                <p class="text-xs text-retro-green-dark leading-relaxed font-medium">
-                    Pembayaran UKT semester ini telah berhasil diverifikasi oleh sistem gateway. Kartu Rencana Studi (KRS) Anda siap diisi pada portal akademik.
-                </p>
+            <div v-else-if="bill.status === 'lunas'" class="p-4 rounded-2xl bg-retro-green-light border-1.5 border-neutral-900 space-y-3">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🎉</span>
+                    <p class="text-xs text-retro-green-dark leading-relaxed font-medium">
+                        Pembayaran UKT semester ini telah berhasil diverifikasi oleh sistem gateway. Kartu Rencana Studi (KRS) Anda siap diisi pada portal akademik.
+                    </p>
+                </div>
+                <div class="pt-2 border-t border-neutral-300 flex items-center justify-between flex-wrap gap-2">
+                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-retro-green-dark">
+                        🎓 Hak Akses Akademik Terbuka:
+                    </span>
+                    <Link
+                        :href="route('mahasiswa.krs.index')"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border-1.5 border-neutral-900 bg-neutral-900 text-white hover:bg-neutral-800 font-bold text-xs shadow-retro-sm transition-all cursor-pointer"
+                    >
+                        <span>📝 Buka Lembar KRS Semester Ini</span>
+                        <span>➔</span>
+                    </Link>
+                </div>
             </div>
 
             <div v-else-if="bill.status === 'kedaluwarsa'" class="flex items-center gap-3 p-4 rounded-xl bg-retro-coral-light border-1.5 border-neutral-900">
