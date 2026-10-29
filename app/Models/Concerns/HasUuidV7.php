@@ -19,4 +19,3 @@ trait HasUuidV7
         return (string) Str::uuid7();
     }
 }
-

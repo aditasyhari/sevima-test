@@ -54,8 +54,9 @@ class TagihanController extends Controller
         $countLunas = Tagihan::where('status', Tagihan::STATUS_LUNAS)->count();
         $countExpired = Tagihan::where('status', Tagihan::STATUS_KEDALUWARSA)->count();
 
-        // Mahasiswa list for creating new bill
+        // Mahasiswa list for creating new bill - scoped to admin's institution
         $students = User::where('role', 'mahasiswa')
+            ->where('institusi_id', auth()->user()->institusi_id)
             ->select('id', 'name', 'nim', 'prodi')
             ->orderBy('name')
             ->get();

@@ -43,4 +43,3 @@ test('student billing endpoint returns bills and transaction history', function 
     $response->assertJsonPath('data.tagihan_list.0.nomor_tagihan', 'TAG-API-001');
     $response->assertJsonPath('data.tagihan_list.0.riwayat_transaksi.0.referensi_gateway', 'GATEWAY-API-99');
 });
-

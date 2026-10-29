@@ -15,13 +15,13 @@ trait BelongsToInstitution
     protected static function bootBelongsToInstitution(): void
     {
         static::addGlobalScope('institution', function (Builder $builder) {
-            if (Auth::check() && Auth::user()->institusi_id) {
+            if (app()->bound('request') && Auth::check() && Auth::user()?->institusi_id) {
                 $builder->where($builder->getModel()->getTable().'.institusi_id', Auth::user()->institusi_id);
             }
         });
 
         static::creating(function ($model) {
-            if (Auth::check() && Auth::user()->institusi_id && empty($model->institusi_id)) {
+            if (app()->bound('request') && Auth::check() && Auth::user()?->institusi_id && empty($model->institusi_id)) {
                 $model->institusi_id = Auth::user()->institusi_id;
             }
         });

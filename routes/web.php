@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\TagihanController as AdminTagihanController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Simulator\GatewaySimulatorController;
@@ -21,13 +22,9 @@ Route::get('/', function () {
 });
 
 // Central Dashboard Route (Dispatches to role-specific dashboard)
-Route::get('/dashboard', function () {
-    if (auth()->user()->isAdminKeuangan()) {
-        return redirect()->route('admin.tagihan.index');
-    }
-
-    return redirect()->route('mahasiswa.dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', DashboardController::class)
+    ->middleware(['auth'])
+    ->name('dashboard');
 
 // Admin Keuangan Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {

@@ -17,6 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Cegah duplikasi jika seeder sudah pernah dijalankan pada volume database yang ada
+        if (Institusi::where('kode', 'UNIV-A')->exists()) {
+            return;
+        }
+
         $password = Hash::make('password');
 
         // ==========================================

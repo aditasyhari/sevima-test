@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\BelongsToInstitution;
 use App\Models\Concerns\HasUuidV7;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use BelongsToInstitution, HasFactory, HasUuidV7, Notifiable;
+    use HasFactory, HasUuidV7, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -51,6 +51,14 @@ class User extends Authenticatable
             'password' => 'hashed',
             'semester_aktif' => 'integer',
         ];
+    }
+
+    /**
+     * Relationship to the user's institution.
+     */
+    public function institusi(): BelongsTo
+    {
+        return $this->belongsTo(Institusi::class, 'institusi_id');
     }
 
     /**
